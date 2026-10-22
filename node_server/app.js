@@ -87,6 +87,10 @@ app.post('/check-spam', async (req, res) => {
 
 
 app.get(/(.*)/, (req, res) => {
+    if (req.path.startsWith('/assets/') || path.extname(req.path)) {
+        return res.status(404).end();
+    }
+
     res.sendFile(path.join(__dirname, './SPA/react_app/dist', 'index.html'));
 });
 

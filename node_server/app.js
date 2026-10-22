@@ -29,6 +29,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+console.log("Looking for static files at:", path.join(__dirname, './SPA/react_app/dist'));
 app.use(express.static(path.join(__dirname, './SPA/react_app/dist')));
 
 app.get('/spam-detector-health', async (req, res) => {

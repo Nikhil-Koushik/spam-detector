@@ -32,6 +32,31 @@ app.use(express.json());
 console.log("Looking for static files at:", path.join(__dirname, './SPA/react_app/dist'));
 app.use(express.static(path.join(__dirname, './SPA/react_app/dist')));
 
+
+const fs = require('fs');
+
+app.get('/debug-files', (req, res) => {
+    try {
+        const rootDir = __dirname;
+        const spaDir = path.join(__dirname, './SPA');
+        const reactAppDir = path.join(__dirname, './SPA/react_app');
+        const distDir = path.join(__dirname, './SPA/react_app/dist');
+        const assetsDir = path.join(distDir, 'assets');
+
+        res.json({
+            currentDirectory: rootDir,
+            rootContents: fs.existsSync(rootDir) ? fs.readdirSync(rootDir) : 'Folder does not exist',
+            spaContents: fs.existsSync(spaDir) ? fs.readdirSync(spaDir) : 'Folder does not exist',
+            reactAppContents: fs.existsSync(reactAppDir) ? fs.readdirSync(reactAppDir) : 'Folder does not exist',
+            distContents: fs.existsSync(distDir) ? fs.readdirSync(distDir) : 'Folder does not exist',
+            assetsContents: fs.existsSync(assetsDir) ? fs.readdirSync(assetsDir) : 'Folder does not exist'
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
 app.get('/spam-detector-health', async (req, res) => {
     try {
         console.log("Initiating /spam-detector-health api call");

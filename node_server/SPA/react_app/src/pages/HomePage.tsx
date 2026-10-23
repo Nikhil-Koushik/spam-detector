@@ -166,7 +166,7 @@ function HomePage() {
               addToSpamCheck();
             }}
           >
-            +
+            Add
           </button>
         </div>
         {spamArr.length > 0 && (

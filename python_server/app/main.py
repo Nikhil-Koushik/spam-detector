@@ -1,6 +1,7 @@
 # to run: uvicorn app.main:app --reload
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 import joblib
 import logging
@@ -36,7 +37,14 @@ class EmailRequest(BaseModel):
 
 
 @app.get("/")
-def health_check():
+def health_check(request: Request):
+    accept = request.headers.get("accept", "")
+    if "text/html" in accept:
+        return RedirectResponse(
+            "https://spam-email-detector-xxq0.onrender.com/?ready=1",
+            status_code=302,
+        )
+
     return {
         "status": "ok",
         "message": "Spam Email Detection API is running"

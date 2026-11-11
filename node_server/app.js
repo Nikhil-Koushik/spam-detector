@@ -29,8 +29,19 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+app.get('/', (req, res, next) => {
+    if (req.query.ready === '1') return next();
+
+    const host = req.get('host') || '';
+    if (host.startsWith('localhost') || host.startsWith('127.0.0.1')) return next();
+
+    res.redirect(302, 'https://spam-detector-python.onrender.com/');
+});
+
 console.log("Looking for static files at:", path.join(__dirname, './SPA/react_app/dist'));
 app.use(express.static(path.join(__dirname, './SPA/react_app/dist')));
+
+
 
 app.get('/spam-detector-health', async (req, res) => {
     try {

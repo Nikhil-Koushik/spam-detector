@@ -4,6 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "npm install && npm --prefix SPA/react_app install && npm --prefix SPA/react_app run build"
   },

@@ -1,0 +1,8 @@
+{
+  "name": "spam-detector",
+  "private": true,
+  "scripts": {
+    "start": "node scripts/start.js",
+    "build:web": "npm --prefix node_server/SPA/react_app install && npm --prefix node_server/SPA/react_app run build"
+  }
+}

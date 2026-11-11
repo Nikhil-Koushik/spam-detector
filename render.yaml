@@ -1,0 +1,12 @@
+# Single web service. The Python model listens on localhost inside this
+# instance and is loaded before Express opens the public port.
+services:
+  - type: web
+    name: spam-detector
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /spam-detector-health
+    envVars:
+      - key: PYTHON_PORT
+        value: "8000"

@@ -1,4 +1,5 @@
-# to run: uvicorn app.main:app --reload
+# Local only: uvicorn app.main:app --host 127.0.0.1 --port 8000
+# Deployed by scripts/start.js in the same process group as the Node server.
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel

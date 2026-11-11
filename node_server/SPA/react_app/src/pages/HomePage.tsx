@@ -14,6 +14,16 @@ function HomePage() {
   const [displayingData, setDisplayingData] = useState<Boolean>(false);
   const [spamArr, setSpamArr] = useState<string[]>([]);
   const [spamArrResponse, setSpamArrResponse] = useState<string[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
+  const readError = async (response: Response, fallback: string) => {
+    try {
+      const body = await response.json();
+      return body?.message || body?.error || fallback;
+    } catch {
+      return fallback;
+    }
+  };
 
   const initializeSpamDetector: Function = async (): Promise<void> => {
     try {
@@ -22,10 +32,17 @@ function HomePage() {
         method: "GET",
       });
 
+      if (!response.ok) {
+        setErrorMessage(await readError(response, "Spam detector is unavailable"));
+        return;
+      }
+
       const data = await response.json();
+      setErrorMessage("");
       console.log(data?.data?.message);
     } catch (e) {
       console.error("Failed to initialize spam detector", e);
+      setErrorMessage("Spam detector is unavailable");
     } finally {
       console.log("Spam detector initialized successfully");
     }
@@ -47,12 +64,19 @@ function HomePage() {
         body: JSON.stringify(body),
       });
 
+      if (!response.ok) {
+        setErrorMessage(await readError(response, "Could not check these messages"));
+        return;
+      }
+
       const data = await response.json();
       setSpamArrResponse(data.data.prediction);
       setDisplayingData(true);
+      setErrorMessage("");
       //   updateSpamData();
     } catch (e) {
       console.error("Failed to fetch spam detection api", e);
+      setErrorMessage("Could not check these messages");
     } finally {
       console.log("Detected data successfully");
     }
@@ -135,12 +159,16 @@ function HomePage() {
     setSpamArr([]);
     setDisplayingData(false);
     setSpamArrResponse([]);
+    setErrorMessage("");
   };
 
   return (
     <>
       <div style={parentDivStyling}>
         <h1>Spam Email Detector</h1>
+        {errorMessage && (
+          <p style={{ color: "#ffb4b4", margin: 0 }}>{errorMessage}</p>
+        )}
         <div style={inputContainerStyling}>
           <input
             style={inputStyling}
